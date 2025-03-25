@@ -1,0 +1,854 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{xeCJK}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Keep aspect ratio if custom image width or height is specified
+    \setkeys{Gin}{keepaspectratio}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{soul}      % strikethrough (\st) support for pandoc >= 3.0.0
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \makeatletter
+    \newsavebox\pandoc@box
+    \newcommand*\pandocbounded[1]{%
+      \sbox\pandoc@box{#1}%
+      % scaling factors for width and height
+      \Gscale@div\@tempa\textheight{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+      \Gscale@div\@tempb\linewidth{\wd\pandoc@box}%
+      % select the smaller of both
+      \ifdim\@tempb\p@<\@tempa\p@
+        \let\@tempa\@tempb
+      \fi
+      % scaling accordingly (\@tempa < 1)
+      \ifdim\@tempa\p@<\p@
+        \scalebox{\@tempa}{\usebox\pandoc@box}%
+      % scaling not needed, use as it is
+      \else
+        \usebox{\pandoc@box}%
+      \fi
+    }
+    \makeatother
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{main}
+    
+    
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{random}
+\PY{k+kn}{from} \PY{n+nn}{collections} \PY{k+kn}{import} \PY{n}{Counter}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}读取机器学习数据集的示例代码 (LIBSVM格式)}
+\PY{k}{def} \PY{n+nf}{load\PYZus{}svmfile}\PY{p}{(}\PY{n}{filename}\PY{p}{)}\PY{p}{:}
+    \PY{n}{X} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{n}{Y} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{k}{with} \PY{n+nb}{open}\PY{p}{(}\PY{n}{filename}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} \PY{k}{as} \PY{n}{f}\PY{p}{:}
+        \PY{n}{filelines} \PY{o}{=} \PY{n}{f}\PY{o}{.}\PY{n}{readlines}\PY{p}{(}\PY{p}{)}
+        \PY{k}{for} \PY{n}{fileline} \PY{o+ow}{in} \PY{n}{filelines}\PY{p}{:}
+            \PY{n}{fileline} \PY{o}{=} \PY{n}{fileline}\PY{o}{.}\PY{n}{strip}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ }\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+            \PY{c+c1}{\PYZsh{}print(fileline)}
+            \PY{n}{Y}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n+nb}{int}\PY{p}{(}\PY{n}{fileline}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+            \PY{n}{tmp} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+            \PY{k}{for} \PY{n}{t} \PY{o+ow}{in} \PY{n}{fileline}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{:}\PY{p}{]}\PY{p}{:}
+                \PY{k}{if} \PY{n+nb}{len}\PY{p}{(}\PY{n}{t}\PY{p}{)}\PY{o}{==}\PY{l+m+mi}{0}\PY{p}{:}
+                    \PY{k}{continue}
+                \PY{n}{tmp}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n+nb}{float}\PY{p}{(}\PY{n}{t}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+            \PY{n}{X}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{tmp}\PY{p}{)}
+    
+    \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{X}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{Y}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}从这个网址下载数据集：https://www.csie.ntu.edu.tw/\PYZti{}cjlin/libsvmtools/datasets/binary.html\PYZsh{}svmguide1}
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}将数据集保存在当前目录下}
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}读取数据集}
+\PY{n}{dataset} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{svmguide1}\PY{l+s+s1}{\PYZsq{}}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Start loading dataset }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{dataset}\PY{p}{)}\PY{p}{)}
+\PY{n}{X}\PY{p}{,} \PY{n}{Y} \PY{o}{=} \PY{n}{load\PYZus{}svmfile}\PY{p}{(}\PY{n}{dataset}\PY{p}{)} \PY{c+c1}{\PYZsh{} train set}
+\PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{Y\PYZus{}test} \PY{o}{=} \PY{n}{load\PYZus{}svmfile}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{.t}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{dataset}\PY{p}{)}\PY{p}{)} \PY{c+c1}{\PYZsh{} test set}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{trainset X shape }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{, train label Y shape }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{X}\PY{o}{.}\PY{n}{shape}\PY{p}{,} \PY{n}{Y}\PY{o}{.}\PY{n}{shape}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{testset X\PYZus{}test shape }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{, test label Y shape }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{o}{.}\PY{n}{shape}\PY{p}{,} \PY{n}{Y\PYZus{}test}\PY{o}{.}\PY{n}{shape}\PY{p}{)}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{load success!}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Start loading dataset svmguide1
+trainset X shape (3089, 4), train label Y shape (3089,)
+testset X\_test shape (4000, 4), test label Y shape (4000,)
+load success!
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{61}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}实现一个KNN分类器的模型，需要完成的功能包括train, test和\PYZus{}calculate\PYZus{}distances三部分}
+\PY{k}{class} \PY{n+nc}{KNN\PYZus{}model}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{k}{def} \PY{n+nf+fm}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{k}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{k} \PY{o}{=} \PY{n}{k}
+    
+    \PY{k}{def} \PY{n+nf}{train}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{x\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}\PY{p}{:}
+\PY{+w}{        }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Implement the training code for KNN}
+\PY{l+s+sd}{        Input: }
+\PY{l+s+sd}{            x\PYZus{}train: Training instances of size (N, D), where N denotes the number of instances and D denotes the feature dimension}
+\PY{l+s+sd}{            y\PYZus{}train: Training labels of size (N, )}
+\PY{l+s+sd}{        \PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{x\PYZus{}train} \PY{o}{=} \PY{n}{x\PYZus{}train}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{y\PYZus{}train} \PY{o}{=} \PY{n}{y\PYZus{}train}
+    
+    \PY{k}{def} \PY{n+nf}{test}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{x\PYZus{}test}\PY{p}{)}\PY{p}{:}
+\PY{+w}{        }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{        Input: Test instances of size (N, D), where N denotes the number of instances and D denotes the feature dimension}
+\PY{l+s+sd}{        Return: Predicted labels of size (N, )}
+\PY{l+s+sd}{        \PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{n}{pred\PYZus{}labels} \PY{o}{=} \PY{p}{[}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}predict}\PY{p}{(}\PY{n}{point}\PY{p}{)} \PY{k}{for} \PY{n}{point} \PY{o+ow}{in} \PY{n}{x\PYZus{}test}\PY{p}{]}
+        \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{pred\PYZus{}labels}\PY{p}{)}
+    
+    \PY{k}{def} \PY{n+nf}{\PYZus{}predict}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{point}\PY{p}{)}\PY{p}{:}
+        \PY{n}{distances} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}calculate\PYZus{}distances}\PY{p}{(}\PY{n}{point}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} print(\PYZsq{}dis:\PYZsq{},distances)}
+        \PY{n}{k\PYZus{}nearest\PYZus{}neighbors} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{n}{distances}\PY{p}{)}\PY{p}{[}\PY{p}{:}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{k}\PY{p}{]}
+        \PY{c+c1}{\PYZsh{} print(\PYZsq{}k:\PYZsq{},k\PYZus{}nearest\PYZus{}neighbors)}
+        \PY{c+c1}{\PYZsh{} print(self.y\PYZus{}train.shape)}
+        \PY{n}{k\PYZus{}nearest\PYZus{}labels} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{y\PYZus{}train}\PY{p}{[}\PY{n}{k\PYZus{}nearest\PYZus{}neighbors}\PY{p}{]}
+        \PY{n}{unique}\PY{p}{,} \PY{n}{counts} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{n}{k\PYZus{}nearest\PYZus{}labels}\PY{p}{,} \PY{n}{return\PYZus{}counts}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+        \PY{n}{most\PYZus{}common\PYZus{}label} \PY{o}{=} \PY{n}{unique}\PY{p}{[}\PY{n}{np}\PY{o}{.}\PY{n}{argmax}\PY{p}{(}\PY{n}{counts}\PY{p}{)}\PY{p}{]}
+        \PY{k}{return} \PY{n}{most\PYZus{}common\PYZus{}label}
+    
+    \PY{k}{def} \PY{n+nf}{\PYZus{}calculate\PYZus{}distances}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{point}\PY{p}{)}\PY{p}{:}
+\PY{+w}{        }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Calculate the euclidean distance between a test instance and all points in the training set x\PYZus{}train}
+\PY{l+s+sd}{        Input: a single point of size (D, )}
+\PY{l+s+sd}{        Return: distance matrix of size (N, )}
+\PY{l+s+sd}{        \PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{n}{dis} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{x\PYZus{}train} \PY{o}{\PYZhy{}} \PY{n}{point}\PY{p}{,} \PY{n}{axis} \PY{o}{=} \PY{l+m+mi}{1}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} print(dis)}
+        \PY{k}{return} \PY{n}{dis}
+
+\PY{c+c1}{\PYZsh{} an easy test from problem 5}
+\PY{c+c1}{\PYZsh{} x\PYZus{}train = np.array([[0, 0], [0, 1], [0, \PYZhy{}1], [\PYZhy{}1, 0], [1, 0], [8, 0], [8, 1], [9, 0]])}
+\PY{c+c1}{\PYZsh{} y\PYZus{}train = np.array([\PYZsq{}A\PYZsq{}, \PYZsq{}A\PYZsq{}, \PYZsq{}A\PYZsq{}, \PYZsq{}A\PYZsq{}, \PYZsq{}A\PYZsq{}, \PYZsq{}B\PYZsq{}, \PYZsq{}A\PYZsq{}, \PYZsq{}B\PYZsq{}])}
+\PY{c+c1}{\PYZsh{} x\PYZus{}test = np.array([[0,\PYZhy{}2], [8, 2]])}
+
+\PY{c+c1}{\PYZsh{} \PYZsh{} k = 1 output AA}
+\PY{c+c1}{\PYZsh{} knn = KNN\PYZus{}model(k=1)}
+\PY{c+c1}{\PYZsh{} knn.train(x\PYZus{}train, y\PYZus{}train)}
+\PY{c+c1}{\PYZsh{} predictions = knn.test(x\PYZus{}test)}
+\PY{c+c1}{\PYZsh{} print(predictions)}
+
+\PY{c+c1}{\PYZsh{} \PYZsh{} k = 3 output AB}
+\PY{c+c1}{\PYZsh{} knn = KNN\PYZus{}model(k=3)}
+\PY{c+c1}{\PYZsh{} knn.train(x\PYZus{}train, y\PYZus{}train)}
+\PY{c+c1}{\PYZsh{} predictions = knn.test(x\PYZus{}test)}
+\PY{c+c1}{\PYZsh{} print(predictions)}
+
+\PY{c+c1}{\PYZsh{} return }
+\PY{c+c1}{\PYZsh{} [\PYZsq{}A\PYZsq{} \PYZsq{}A\PYZsq{}]}
+\PY{c+c1}{\PYZsh{} [\PYZsq{}A\PYZsq{} \PYZsq{}B\PYZsq{}]}
+\PY{c+c1}{\PYZsh{} 应该是对的,跟第五问答案一样。}
+
+        
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{62}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} 将原来的训练集划分成两部分：训练和验证}
+\PY{n}{random}\PY{o}{.}\PY{n}{seed}\PY{p}{(}\PY{l+m+mi}{777777}\PY{p}{)} \PY{c+c1}{\PYZsh{}定下随机种子}
+\PY{n}{N} \PY{o}{=} \PY{n}{X}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} 
+\PY{n}{valid\PYZus{}frac} \PY{o}{=} \PY{l+m+mf}{0.2} \PY{c+c1}{\PYZsh{} 设置验证集的比例为20\PYZpc{}}
+\PY{n}{valid\PYZus{}size} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{N}\PY{o}{*}\PY{n}{valid\PYZus{}frac}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} 出于简单起见，这里直接使用random shuffle来划分}
+\PY{n}{shuffle\PYZus{}index} \PY{o}{=} \PY{p}{[}\PY{n}{i} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{]}
+\PY{n}{random}\PY{o}{.}\PY{n}{shuffle}\PY{p}{(}\PY{n}{shuffle\PYZus{}index}\PY{p}{)}
+\PY{n}{valid\PYZus{}index}\PY{p}{,} \PY{n}{train\PYZus{}index} \PY{o}{=} \PY{n}{shuffle\PYZus{}index}\PY{p}{[}\PY{p}{:}\PY{n}{valid\PYZus{}size}\PY{p}{]}\PY{p}{,} \PY{n}{shuffle\PYZus{}index}\PY{p}{[}\PY{n}{valid\PYZus{}size}\PY{p}{:}\PY{p}{]}
+\PY{n}{X\PYZus{}valid}\PY{p}{,} \PY{n}{Y\PYZus{}valid} \PY{o}{=} \PY{n}{X}\PY{p}{[}\PY{n}{valid\PYZus{}index}\PY{p}{]}\PY{p}{,} \PY{n}{Y}\PY{p}{[}\PY{n}{valid\PYZus{}index}\PY{p}{]}
+\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{Y\PYZus{}train} \PY{o}{=} \PY{n}{X}\PY{p}{[}\PY{n}{train\PYZus{}index}\PY{p}{]}\PY{p}{,} \PY{n}{Y}\PY{p}{[}\PY{n}{train\PYZus{}index}\PY{p}{]}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{trainset X\PYZus{}train shape }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{, validset X\PYZus{}valid shape }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{shape}\PY{p}{,} \PY{n}{X\PYZus{}valid}\PY{o}{.}\PY{n}{shape}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+trainset X\_train shape (2472, 4), validset X\_valid shape (617, 4)
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{63}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} 这里需要实现计算准确率的函数，注意我们期望的输出是百分制，如准确率是0.95，我们期望的输出是95}
+\PY{k}{def} \PY{n+nf}{cal\PYZus{}accuracy}\PY{p}{(}\PY{n}{y\PYZus{}pred}\PY{p}{,} \PY{n}{y\PYZus{}gt}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}}
+\PY{l+s+sd}{    y\PYZus{}pred: predicted labels (N,)}
+\PY{l+s+sd}{    y\PYZus{}gt: ground truth labels (N,)}
+\PY{l+s+sd}{    Return: Accuracy (\PYZpc{})}
+\PY{l+s+sd}{    \PYZsq{}\PYZsq{}\PYZsq{}}
+    \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{y\PYZus{}pred} \PY{o}{==} \PY{n}{y\PYZus{}gt}\PY{p}{)}\PY{o}{/}\PY{n}{y\PYZus{}pred}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{*}\PY{l+m+mi}{100}
+    
+\PY{k}{assert} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{cal\PYZus{}accuracy}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{n}{Y}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n}{Y}\PY{p}{)}\PY{o}{\PYZhy{}}\PY{l+m+mi}{100}\PY{o}{*}\PY{l+m+mf}{1089.0}\PY{o}{/}\PY{l+m+mf}{3089.0}\PY{p}{)}\PY{o}{\PYZlt{}}\PY{l+m+mf}{1e\PYZhy{}3}
+\PY{c+c1}{\PYZsh{} print(abs(cal\PYZus{}accuracy(np.zeros(Y.shape[0]), Y)\PYZhy{}100*1089.0/3089.0))}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{64}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}使用验证集来选择超参数}
+\PY{n}{possible\PYZus{}k\PYZus{}list} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{7}\PY{p}{,}\PY{l+m+mi}{9}\PY{p}{,}\PY{l+m+mi}{11}\PY{p}{]} \PY{c+c1}{\PYZsh{} 在本次实验中候选的超参数取值}
+\PY{n}{accs} \PY{o}{=} \PY{p}{[}\PY{p}{]} \PY{c+c1}{\PYZsh{} 将每个取值k对应的验证集准确率加入列表}
+\PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n}{possible\PYZus{}k\PYZus{}list}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}模型的超参数设置为k}
+    \PY{n}{model} \PY{o}{=} \PY{n}{KNN\PYZus{}model}\PY{p}{(}\PY{n}{k}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}在训练集上训练, 提示: model.train()}
+    \PY{n}{model}\PY{o}{.}\PY{n}{train}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{Y\PYZus{}train}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}在验证集X\PYZus{}valid上给出预测结果 Y\PYZus{}pred\PYZus{}valid, 提示：model.test()}
+    \PY{n}{Y\PYZus{}pred\PYZus{}valid} \PY{o}{=} \PY{n}{model}\PY{o}{.}\PY{n}{test}\PY{p}{(}\PY{n}{X\PYZus{}valid}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}计算验证集上的准确率}
+    \PY{n}{acc\PYZus{}k} \PY{o}{=} \PY{n}{cal\PYZus{}accuracy}\PY{p}{(}\PY{n}{Y\PYZus{}pred\PYZus{}valid}\PY{p}{,} \PY{n}{Y\PYZus{}valid}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}将每个取值k对应的验证集准确率加入列表}
+    \PY{n}{accs}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{acc\PYZus{}k}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k=}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{, accuracy on validation=}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{k}\PY{p}{,} \PY{n}{acc\PYZus{}k}\PY{p}{)}\PY{p}{)}
+
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{possible\PYZus{}k\PYZus{}list}\PY{p}{,} \PY{n}{accs}\PY{p}{)} \PY{c+c1}{\PYZsh{}画出每个k对应的验证集准确率}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+k=1, accuracy on validation=96.27228525121556\%
+k=3, accuracy on validation=96.27228525121556\%
+k=5, accuracy on validation=96.27228525121556\%
+k=7, accuracy on validation=96.43435980551054\%
+k=9, accuracy on validation=96.11021069692059\%
+k=11, accuracy on validation=95.62398703403565\%
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{64}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+[<matplotlib.lines.Line2D at 0x117a5aa10>]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_6_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \#\#\#\#\#基于上面的结果确定验证集上的最好的超参数k，根据这个k最终在测试集上进行测试
+
+\#\#\#\#\#定义最好的k对应的模型 pass
+
+\#\#\#\#\#在训练集上训练，注意这里可以使用全部的训练数据 pass
+
+\#\#\#\#\#在测试集上测试生成预测 Y\_pred\_test pass print(`Test
+Accuracy=\{\}\%'.format(cal\_accuracy(Y\_pred\_test, Y\_test)))
+
+    \#\#\#\#\#以下需要实现5折交叉验证，可以参考之前训练集和验证集划分的方式
+folds = 5
+
+for k in possible\_k\_list: \# 遍历所有可能的k
+print(`******k=\{\}******'.format(k)) valid\_accs = {[}{]} for i in
+range(folds): \# 第i折的实验 \#\#\#\#\# 生成第i折的训练集 X\_train\_i,
+Y\_train\_i和验证集 X\_valid\_i, Y\_valid\_i; 提示：可参考之前random
+shuffle的方式来生成index pass \#\#\#\#\# 定义超参数设置为k的模型 pass
+\#\#\#\#\# 在Fold-i上进行训练 pass \#\#\#\#\#
+给出Fold-i验证集X\_valid\_i上的预测结果 Y\_pred\_valid\_i pass acc =
+cal\_accuracy(Y\_pred\_valid\_i, Y\_valid\_i) valid\_accs.append(acc)
+print(`Valid Accuracy on Fold-\{\}: \{\}\%'.format(i+1, acc))
+
+\begin{verbatim}
+print('k={}, Accuracy {}+-{}%'.format(k, np.mean(valid_accs), np.std(valid_accs)))
+\end{verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{65}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}基于交叉验证确定验证集上的最好的超参数k，根据这个k最终在测试集上进行测试}
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}定义最好的k对应的模型}
+\PY{n}{best\PYZus{}k} \PY{o}{=} \PY{l+m+mi}{7}
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}在训练集上训练，注意这里可以使用全部的训练数据}
+\PY{n}{best\PYZus{}model} \PY{o}{=} \PY{n}{KNN\PYZus{}model}\PY{p}{(}\PY{n}{best\PYZus{}k}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}在测试集上测试生成预测 Y\PYZus{}pred\PYZus{}test}
+\PY{n}{best\PYZus{}model}\PY{o}{.}\PY{n}{train}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{)}
+\PY{n}{Y\PYZus{}pred\PYZus{}test} \PY{o}{=} \PY{n}{best\PYZus{}model}\PY{o}{.}\PY{n}{test}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Test Accuracy chosing k using cross\PYZhy{}validation=}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{cal\PYZus{}accuracy}\PY{p}{(}\PY{n}{Y\PYZus{}pred\PYZus{}test}\PY{p}{,} \PY{n}{Y\PYZus{}test}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Test Accuracy chosing k using cross-validation=96.575\%
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{67}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}以下需要实现5折交叉验证，可以参考之前训练集和验证集划分的方式}
+\PY{n}{folds} \PY{o}{=} \PY{l+m+mi}{5}
+
+\PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n}{possible\PYZus{}k\PYZus{}list}\PY{p}{:} \PY{c+c1}{\PYZsh{} 遍历所有可能的k}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{******k=}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{******}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{k}\PY{p}{)}\PY{p}{)}
+    \PY{n}{valid\PYZus{}accs} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{folds}\PY{p}{)}\PY{p}{:} \PY{c+c1}{\PYZsh{} 第i折的实验}
+        \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} 生成第i折的训练集 X\PYZus{}train\PYZus{}i, Y\PYZus{}train\PYZus{}i和验证集 X\PYZus{}valid\PYZus{}i, Y\PYZus{}valid\PYZus{}i; 提示：可参考之前random shuffle的方式来生成index}
+        \PY{n}{random}\PY{o}{.}\PY{n}{seed}\PY{p}{(}\PY{l+m+mi}{777777}\PY{p}{)} \PY{c+c1}{\PYZsh{}定下随机种子}
+        \PY{n}{N} \PY{o}{=} \PY{n}{X}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} 
+        \PY{n}{indices} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{permutation}\PY{p}{(}\PY{n}{N}\PY{p}{)}
+        \PY{n}{valid\PYZus{}frac} \PY{o}{=} \PY{l+m+mi}{1}\PY{o}{/}\PY{n}{folds} 
+        \PY{n}{valid\PYZus{}size} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{N}\PY{o}{*}\PY{n}{valid\PYZus{}frac}\PY{p}{)}
+
+        \PY{n}{valid\PYZus{}indices} \PY{o}{=} \PY{n}{indices}\PY{p}{[}\PY{n}{i} \PY{o}{*} \PY{n}{valid\PYZus{}size}\PY{p}{:} \PY{p}{(}\PY{n}{i} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{*} \PY{n}{valid\PYZus{}size}\PY{p}{]}
+        \PY{n}{train\PYZus{}indices} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{setdiff1d}\PY{p}{(}\PY{n}{indices}\PY{p}{,} \PY{n}{valid\PYZus{}indices}\PY{p}{)}
+
+        \PY{n}{X\PYZus{}train\PYZus{}i}\PY{p}{,} \PY{n}{Y\PYZus{}train\PYZus{}i} \PY{o}{=} \PY{n}{X}\PY{p}{[}\PY{n}{train\PYZus{}indices}\PY{p}{]}\PY{p}{,} \PY{n}{Y}\PY{p}{[}\PY{n}{train\PYZus{}indices}\PY{p}{]}
+        \PY{n}{X\PYZus{}valid\PYZus{}i}\PY{p}{,} \PY{n}{Y\PYZus{}valid\PYZus{}i} \PY{o}{=} \PY{n}{X}\PY{p}{[}\PY{n}{valid\PYZus{}indices}\PY{p}{]}\PY{p}{,} \PY{n}{Y}\PY{p}{[}\PY{n}{valid\PYZus{}indices}\PY{p}{]}
+
+        \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} 定义超参数设置为k的模型}
+        \PY{n}{model} \PY{o}{=} \PY{n}{KNN\PYZus{}model}\PY{p}{(}\PY{n}{k}\PY{o}{=}\PY{n}{k}\PY{p}{)}
+        \PY{n}{model}\PY{o}{.}\PY{n}{train}\PY{p}{(}\PY{n}{X\PYZus{}train\PYZus{}i}\PY{p}{,} \PY{n}{Y\PYZus{}train\PYZus{}i}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} 在Fold\PYZhy{}i上进行训练}
+        \PY{n}{model}\PY{o}{.}\PY{n}{train}\PY{p}{(}\PY{n}{X\PYZus{}train\PYZus{}i}\PY{p}{,} \PY{n}{Y\PYZus{}train\PYZus{}i}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} 给出Fold\PYZhy{}i验证集X\PYZus{}valid\PYZus{}i上的预测结果 Y\PYZus{}pred\PYZus{}valid\PYZus{}i}
+        \PY{n}{Y\PYZus{}pred\PYZus{}valid\PYZus{}i} \PY{o}{=} \PY{n}{model}\PY{o}{.}\PY{n}{test}\PY{p}{(}\PY{n}{X\PYZus{}valid\PYZus{}i}\PY{p}{)}
+        \PY{n}{acc} \PY{o}{=} \PY{n}{cal\PYZus{}accuracy}\PY{p}{(}\PY{n}{Y\PYZus{}pred\PYZus{}valid\PYZus{}i}\PY{p}{,} \PY{n}{Y\PYZus{}valid\PYZus{}i}\PY{p}{)}
+        \PY{n}{valid\PYZus{}accs}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{acc}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Valid Accuracy on Fold\PYZhy{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{acc}\PY{p}{)}\PY{p}{)}
+    
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k=}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{, Accuracy }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{+\PYZhy{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{k}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{valid\PYZus{}accs}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{valid\PYZus{}accs}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+******k=1******
+Valid Accuracy on Fold-1: 95.46191247974069\%
+Valid Accuracy on Fold-2: 95.9481361426256\%
+Valid Accuracy on Fold-3: 94.6515397082658\%
+Valid Accuracy on Fold-4: 94.97568881685575\%
+Valid Accuracy on Fold-5: 94.6515397082658\%
+k=1, Accuracy 95.13776337115071+-0.5021696397027438\%
+******k=3******
+Valid Accuracy on Fold-1: 96.11021069692059\%
+Valid Accuracy on Fold-2: 96.27228525121556\%
+Valid Accuracy on Fold-3: 96.27228525121556\%
+Valid Accuracy on Fold-4: 96.75850891410049\%
+Valid Accuracy on Fold-5: 96.27228525121556\%
+k=3, Accuracy 96.33711507293356+-0.21984862181929446\%
+******k=5******
+Valid Accuracy on Fold-1: 97.24473257698541\%
+Valid Accuracy on Fold-2: 98.05510534846029\%
+Valid Accuracy on Fold-3: 96.75850891410049\%
+Valid Accuracy on Fold-4: 98.05510534846029\%
+Valid Accuracy on Fold-5: 97.24473257698541\%
+k=5, Accuracy 97.47163695299838+-0.5084080110650905\%
+******k=7******
+Valid Accuracy on Fold-1: 95.2998379254457\%
+Valid Accuracy on Fold-2: 96.5964343598055\%
+Valid Accuracy on Fold-3: 97.56888168557536\%
+Valid Accuracy on Fold-4: 97.40680713128039\%
+Valid Accuracy on Fold-5: 96.27228525121556\%
+k=7, Accuracy 96.62884927066452+-0.8225982198022385\%
+******k=9******
+Valid Accuracy on Fold-1: 95.46191247974069\%
+Valid Accuracy on Fold-2: 95.9481361426256\%
+Valid Accuracy on Fold-3: 95.46191247974069\%
+Valid Accuracy on Fold-4: 96.5964343598055\%
+Valid Accuracy on Fold-5: 95.9481361426256\%
+k=9, Accuracy 95.88330632090761+-0.4176369117252798\%
+******k=11******
+Valid Accuracy on Fold-1: 95.78606158833063\%
+Valid Accuracy on Fold-2: 97.08265802269044\%
+Valid Accuracy on Fold-3: 96.27228525121556\%
+Valid Accuracy on Fold-4: 95.62398703403565\%
+Valid Accuracy on Fold-5: 97.24473257698541\%
+k=11, Accuracy 96.40194489465154+-0.6595458654578893\%
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{68}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}基于交叉验证确定验证集上的最好的超参数k，根据这个k最终在测试集上进行测试}
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}定义最好的k对应的模型}
+\PY{n}{best\PYZus{}k} \PY{o}{=} \PY{l+m+mi}{7}
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}在训练集上训练，注意这里可以使用全部的训练数据}
+\PY{n}{best\PYZus{}model} \PY{o}{=} \PY{n}{KNN\PYZus{}model}\PY{p}{(}\PY{n}{best\PYZus{}k}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}在测试集上测试生成预测 Y\PYZus{}pred\PYZus{}test}
+\PY{n}{best\PYZus{}model}\PY{o}{.}\PY{n}{train}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{)}
+\PY{n}{Y\PYZus{}pred\PYZus{}test} \PY{o}{=} \PY{n}{best\PYZus{}model}\PY{o}{.}\PY{n}{test}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Test Accuracy chosing k using cross\PYZhy{}validation=}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{cal\PYZus{}accuracy}\PY{p}{(}\PY{n}{Y\PYZus{}pred\PYZus{}test}\PY{p}{,} \PY{n}{Y\PYZus{}test}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Test Accuracy chosing k using cross-validation=96.575\%
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{69}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}如果训练/测试集不均衡如果评估模型呢？}
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}生成一个不均衡的测试集，由于示例数据集中所有的标签1都在后面所以出于方便直接这样来生成一个不均衡的测试集}
+\PY{n}{N\PYZus{}test} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{l+m+mf}{0.7}\PY{p}{)}
+\PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{Y\PYZus{}test} \PY{o}{=} \PY{n}{X\PYZus{}test}\PY{p}{[}\PY{p}{:}\PY{n}{N\PYZus{}test}\PY{p}{]}\PY{p}{,} \PY{n}{Y\PYZus{}test}\PY{p}{[}\PY{p}{:}\PY{n}{N\PYZus{}test}\PY{p}{]}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{Counter}\PY{p}{(}\PY{n}{Y\PYZus{}test}\PY{p}{)}\PY{p}{)} \PY{c+c1}{\PYZsh{} 输出新的测试集中的标签分布}
+
+\PY{n}{model} \PY{o}{=} \PY{n}{KNN\PYZus{}model}\PY{p}{(}\PY{n}{k}\PY{o}{=}\PY{n}{best\PYZus{}k}\PY{p}{)} \PY{c+c1}{\PYZsh{} 此处请填入交叉验证确定的最好的k}
+\PY{n}{model}\PY{o}{.}\PY{n}{train}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{)}
+\PY{n}{Y\PYZus{}pred\PYZus{}test} \PY{o}{=} \PY{n}{model}\PY{o}{.}\PY{n}{test}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{}实现计算percision， recall和F1 score的函数}
+\PY{k}{def} \PY{n+nf}{cal\PYZus{}prec\PYZus{}recall\PYZus{}f1}\PY{p}{(}\PY{n}{Y\PYZus{}pred}\PY{p}{,} \PY{n}{Y\PYZus{}gt}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}}
+\PY{l+s+sd}{    Input: predicted labels y\PYZus{}pred, ground truth labels Y\PYZus{}gt}
+\PY{l+s+sd}{    Retur: precision, recall, and F1 score}
+\PY{l+s+sd}{    \PYZsq{}\PYZsq{}\PYZsq{}}
+    \PY{n}{TP} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{(}\PY{n}{Y\PYZus{}pred} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{Y\PYZus{}gt} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+    \PY{n}{FP} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{(}\PY{n}{Y\PYZus{}pred} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{Y\PYZus{}gt} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
+    \PY{n}{FN} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{(}\PY{n}{Y\PYZus{}pred} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{Y\PYZus{}gt} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+    \PY{n}{TN} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{(}\PY{n}{Y\PYZus{}pred} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{Y\PYZus{}gt} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
+    
+    \PY{n}{precision} \PY{o}{=} \PY{n}{TP} \PY{o}{/} \PY{p}{(}\PY{n}{TP} \PY{o}{+} \PY{n}{FP}\PY{p}{)} \PY{k}{if} \PY{p}{(}\PY{n}{TP} \PY{o}{+} \PY{n}{FP}\PY{p}{)} \PY{o}{!=} \PY{l+m+mi}{0} \PY{k}{else} \PY{l+m+mi}{0}
+    \PY{n}{recall} \PY{o}{=} \PY{n}{TP} \PY{o}{/} \PY{p}{(}\PY{n}{TP} \PY{o}{+} \PY{n}{FN}\PY{p}{)} \PY{k}{if} \PY{p}{(}\PY{n}{TP} \PY{o}{+} \PY{n}{FN}\PY{p}{)} \PY{o}{!=} \PY{l+m+mi}{0} \PY{k}{else} \PY{l+m+mi}{0}
+    \PY{n}{f1} \PY{o}{=} \PY{l+m+mi}{2} \PY{o}{*} \PY{p}{(}\PY{n}{precision} \PY{o}{*} \PY{n}{recall}\PY{p}{)} \PY{o}{/} \PY{p}{(}\PY{n}{precision} \PY{o}{+} \PY{n}{recall}\PY{p}{)} \PY{k}{if} \PY{p}{(}\PY{n}{precision} \PY{o}{+} \PY{n}{recall}\PY{p}{)} \PY{o}{!=} \PY{l+m+mi}{0} \PY{k}{else} \PY{l+m+mi}{0}
+    
+    
+    \PY{k}{return} \PY{n}{precision}\PY{p}{,} \PY{n}{recall}\PY{p}{,} \PY{n}{f1}
+    
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{cal\PYZus{}prec\PYZus{}recall\PYZus{}f1}\PY{p}{(}\PY{n}{Y\PYZus{}pred\PYZus{}test}\PY{p}{,} \PY{n}{Y\PYZus{}test}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Counter(\{np.int64(0): 2000, np.int64(1): 800\})
+(np.float64(0.910271546635183), np.float64(0.96375),
+np.float64(0.936247723132969))
+    \end{Verbatim}
+
+    \hypertarget{ux95eeux9898ux548cux601dux8003}{%
+\section{问题和思考}\label{ux95eeux9898ux548cux601dux8003}}
+
+问题是一开始做knn的时候查了一些numpy的用法，然后就是jupyter不支持补全，所以导致我有个地方写错了一直没有纠正，然后查了1个小时才发现是写错了一个字母\ldots.
+还有就是precision和recall要考虑分母为0的情况。
+思考就是，完整的过了一遍机器学习的流程，挺好的感觉，就是可以用py可能比notebook方便QAQ\ldots{}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 221300079 王俊童 人工智能学院}
+
+\PY{c+c1}{\PYZsh{} 由于发现这个东西不支持中文，我就在这里直接说好了，用python注释的形式来说。}
+
+\PY{c+c1}{\PYZsh{} 问题和思考}
+
+\PY{c+c1}{\PYZsh{} 问题是一开始做knn的时候查了一些numpy的用法，然后就是jupyter不支持补全，所以导致我有个地方写错了一直没有纠正，然后查了1个小时才发现是写错了一个字母.... }
+\PY{c+c1}{\PYZsh{} 还有就是precision和recall要考虑分母为0的情况。 }
+
+\PY{c+c1}{\PYZsh{} 思考就是，完整的过了一遍机器学习的流程，挺好的感觉，就是可以用py可能比notebook方便QAQ...}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}

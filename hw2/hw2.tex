@@ -1,0 +1,181 @@
+% 请确保文件编码为utf-8，使用XeLaTex进行编译，或者通过overleaf进行编译
+
+\documentclass[answers]{exam}  % 使用此行带有作答模块
+% \documentclass{exam} % 使用此行只显示题目
+
+\usepackage{xeCJK}
+\usepackage{zhnumber}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{enumerate}
+\usepackage{enumitem} % 控制列表样式
+
+\title{2025模式识别 \\ 作业二}
+\date{2025.3.25}
+\pagestyle{headandfoot}
+\author{人工智能学院 221300079 王俊童}
+\firstpageheadrule
+\firstpageheader{南京大学}{2025模式识别}{作业二}
+\runningheader{南京大学}
+{2025模式识别}
+{作业二}
+\runningheadrule
+\firstpagefooter{}{第\thepage\ 页（共\numpages 页）}{}
+\runningfooter{}{第\thepage\ 页（共\numpages 页）}{}
+
+% no box for solutions
+% \unframedsolutions
+\def \x \mathbf{x}
+
+
+\setlength\linefillheight{.5in}
+
+% \renewcommand{\solutiontitle}{\noindent\textbf{答：}}
+\renewcommand{\solutiontitle}{\noindent\textbf{解：}\par\noindent}
+
+\renewcommand{\thequestion}{\zhnum{question}}
+\renewcommand{\questionlabel}{\thequestion .}
+\renewcommand{\thepartno}{\arabic{partno}}
+\renewcommand{\partlabel}{\thepartno .}
+
+\def\dist{{\mathrm{dist}}}
+\def\x{{\boldsymbol{x}}}
+\def\w{{\boldsymbol{w}}}
+
+
+\begin{document}
+% \normalsize
+\maketitle
+221300079 王俊童，人工智能学院
+\section{问题一}
+\begin{enumerate}[label=\alph*.] 
+    \item 对于这个形式化问题，根据题目的描述如下:$\gamma_{ij}$表示第j个样本（共M
+    个被分到了第i类别（共K类）。而$\mu_i$代表这个类别的均值。那很显然的一个事情是，我们的
+    分类标准应该是类内是要尽量小的，意思是离均值点的距离应当近。因此我们的目标是，对于每一个类别
+    都要做到这一点，那对应样本应该被分进正确的类别以达到最小，问题形式化如下：
+    \begin{equation*}
+        \mathcal{L} =\sum_{i=1}^{K}\sum_{j=1}^{M}\gamma_{ij}\|x_j-\mu_i\|
+    \end{equation*}
+    那么优化函数就可以写为题目说的那个样子:
+    \begin{equation}
+        \label{eq:1}
+        \mathop{\arg\min}_{\gamma_{ij},\mu_i} \sum_{i=1}^{K}\sum_{j=1}^{M}\gamma_{ij}\|x_j-\mu_i\|
+    \end{equation}
+    QED，Eqn.~\ref{eq:1}
+
+    \item 根据题目描述，第一步应该是$\mu_i$被固定，那么优化问题就变成了对于M个样本，我们要做到优化对于每个样本来说:
+    \begin{equation*}
+        \mathcal{L}_j = \sum_{i=1}^{K} \gamma_{ij}\|x_j - \mu_i\|^2
+    \end{equation*}
+    要做到上述的j个（共M个式子）最小，意思是属于某一个类别。那么对于这个东西，相当于求一个
+    \begin{equation*}
+        \mathop{\arg\min}_{i} \|x_j - \mu_i\|^2
+    \end{equation*}
+    只要找到了最小的，其他的标识变量都是0了。所以$\gamma_{ij}$可以重写为:
+    \begin{equation}
+        \gamma_{ij} = 
+        \begin{cases}
+            1, if\ dist = min_i \|x_j - \mu_i\|^2\\
+            0, otherwise.
+        \end{cases}
+    \end{equation}
+    对于第二步骤，其实是固定了类别之后，需要重新找一个分类的最小均值。此时问题变为:
+    \begin{equation*}
+        \label{eq:2}
+        \mathcal{L}_i = \sum_{j=1}^{M}  \gamma_{ij}\|x_j - \mu_i\|^2
+    \end{equation*}
+    可以求导:
+    \begin{equation*}
+        \frac{\partial \mathcal{L}}{\partial \mu_i} = 0
+    \end{equation*}
+    可以解得:
+    \begin{equation}
+        \label{eq:3}
+        \mu_i = \frac{\sum_{j=1}^{M}\gamma_{ij}x_j}{\sum_{j=1}^{M}\gamma_{ij}}
+    \end{equation}
+    所以这个题目的更新规则如Eqn.~\ref{eq:2},Eqn.~\ref{eq:3}所示。
+    \item 证明敛散性，相当于证明，新得到的$\mathcal{L}' - \mathcal{L}$跟0的关系:\\
+    对于步骤1，样本找到了一个新的类别，意思是找到了一个更小的均值点和他的距离，那么问题可以写为:
+    \begin{equation*}
+        \mathcal{L}' - \mathcal{L} = \sum_{i=1}^{K}\sum_{j=1}^{M}(\gamma_{ij}' - \gamma_{ij})\|x_j-\mu_i'\|^2
+    \end{equation*}
+    \begin{equation*}
+        \mathcal{L}' - \mathcal{L} = \sum_{i=1}^{K}\sum_{j=1}^{M}(\|x_j-\mu_i'\|^2 - \|x_j-\mu_i\|^2)\leq 0
+    \end{equation*}
+    显然，根据刚才的证明，他会更小，所以一定成立。\\
+    对于步骤2，只针对每一个类别来说，切换新的均值点，不增加计算成本，那么考虑一个类就行了:
+    \begin{equation*}
+        \mathcal{L}' - \mathcal{L} \sim \sum_{j=1}^{M}(\|x_j-\mu_i'\|^2 - \|x_j-\mu_i\|^2)
+    \end{equation*}
+    \begin{equation*}
+        \mathcal{L}' - \mathcal{L} \sim \sum_{j=1}^{M}(\mu_i - \mu_i')^\top(2x_j - \mu_i - \mu_i')
+    \end{equation*}
+    将Eqn.~\ref{eq:3}带入可以化简得到:
+    \begin{equation*}
+        \mathcal{L}' - \mathcal{L} \sim -(\mu_i - \mu_i')^\top(\mu_i - \mu_i')\leq 0
+    \end{equation*}
+    那么，根据证明，确实收敛。
+\end{enumerate}
+
+\section{问题二}
+\begin{enumerate}[label=\alph*.] 
+    \item 把题目说的形式带进去可以了:
+    \begin{equation*}
+        \sum_{i=1}^{n} \epsilon_i^2 = \sum_{i=1}^{n} (y_i - \x_i^\top \mathbf{\beta})
+    \end{equation*}
+    \begin{equation*}
+        \mathop{\arg\min}_{\mathbf{\beta}} \sum_{i=1}^{n} (y_i - \x_i^\top \mathbf{\beta})
+    \end{equation*}
+    \item 可以写成矩阵形式的优化问题:
+    \begin{equation*}
+        \mathop{\arg\min}_{\mathbf{\beta}} (\mathbf{y} - \mathbf{X} \mathbf{\beta})^\top (\mathbf{y} - \mathbf{X} \mathbf{\beta})
+    \end{equation*}
+    矩阵形式的优化问题就是这样。
+    \item 可逆的话，那么用求导等于0就好了:
+    \begin{equation*}
+        \frac{\partial \mathcal{L}}{\partial \beta} = 2\mathbf{X}^\top (\mathbf{X}\beta - \mathbf{y}) = 0
+    \end{equation*}
+    \begin{equation*}
+        \beta^* = (\mathbf{X}^\top\mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}
+    \end{equation*}
+    \item 因为维度d比n大，第二问说X是n*d的，那么$rank(\mathbf{X})\leq n<d$可以得到，那么$rank(\mathbf{X}^\top \mathbf{X})\leq n<d$可以得到。但是，
+    $\mathbf{X}^\top\mathbf{X}$这个东西是d*d的，所以一定不满秩。那就不可逆了
+    \item 在正则化项加入了之后，这个东西一般不可逆的，就可以求解了。而且一般模型都没有闭式解，这种
+    情况下引入正则化项既降低了复杂度，也同时使得式子可以求解，这样就有闭式解了，一般为复杂度最低的，
+    感觉也算是一种归纳偏好吧。
+    \item 引入正则化之后的优化目标如下:
+    \begin{equation*}
+        \mathop{\arg\min}_{\mathbf{\beta}} (\mathbf{y} - \mathbf{X} \mathbf{\beta})^\top (\mathbf{y} - \mathbf{X} \mathbf{\beta}) + \lambda \mathbf{\beta}^\top \mathbf{\beta}
+    \end{equation*}
+    求导化简:
+    \begin{equation*}
+        \frac{\partial \mathcal{L}}{\partial \beta} = 2\mathbf{X}^\top (\mathbf{X}\beta - \mathbf{y}) + 2\lambda \mathbf{\beta}= 0
+    \end{equation*}
+    \begin{equation*}
+        \beta^* = (\mathbf{X}^\top\mathbf{X} + \lambda \mathbf{I})^{-1} \mathbf{X}^\top \mathbf{y}
+    \end{equation*}
+    \item 上面说了，如果不可逆的时候，这样就解决不了了，因为没有唯一的闭式解了。但是这个东西加入之后，那个$\lambda\mathbf{I}$可以
+    让基本所有情况都可以解。这个时候就可以选择了。
+    \item $\lambda=0$,就变成之前的普通线性回归,$\lambda=\infty$,这个只能解后面的$\beta^\top\beta = 0$,答案就是0.
+    \item 我觉得不行，假如我们可以找到最优解$\lambda^*, \beta^*$，那么原来的运算可以写作:
+    \begin{equation*}
+        (\mathbf{y} - \mathbf{X} \mathbf{\beta^*})^\top (\mathbf{y} - \mathbf{X} \mathbf{\beta^*}) + \lambda^* \mathbf{\beta^*}^\top \mathbf{\beta^*}
+    \end{equation*}
+    但是你会发现一个非常严肃的问题，当没有正则化的时候，一定存在:
+    \begin{equation*}
+        (\mathbf{y} - \mathbf{X} \mathbf{\beta^*})^\top (\mathbf{y} - \mathbf{X} \mathbf{\beta^*}) < (\mathbf{y} - \mathbf{X} \mathbf{\beta^*})^\top (\mathbf{y} - \mathbf{X} \mathbf{\beta^*}) + \lambda^* \mathbf{\beta^*}^\top \mathbf{\beta^*}
+    \end{equation*}
+    那不是，我令为0不就行了，所以没啥用。
+\end{enumerate}
+
+
+\section{问题三}
+\begin{enumerate}[label=\alph*.] 
+    \item 1
+\end{enumerate}
+
+\end{document}

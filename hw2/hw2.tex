@@ -215,6 +215,13 @@
     \item 我们通过计算可以得到新的AUC为0.6794，新的AP为0.7167.其实就是跟先进入正样本还是负样本的顺序有区别罢了。
     \item 计算得到:AUC-PR: 0.6906,
     AP: 0.7278.说明我们算对了。
+    图像如下:
+    \begin{figure}[ht]
+        \centering
+        \label{auc}
+        \includegraphics[width=0.8\textwidth]{pr.png} 
+        \caption{auc}  
+    \end{figure}
     代码如下：
     \begin{lstlisting}[language=Python, caption=Python代码示例, label=code:example, basicstyle=\ttfamily]
         import numpy as np
@@ -254,13 +261,6 @@
         plt.savefig('pr.png')
         plt.show()
     \end{lstlisting}
-    图像如下:
-    \begin{figure}
-        \centering
-        \label{auc}
-        \includegraphics[width=0.8\textwidth]{pr.png} 
-        \caption{auc}  
-    \end{figure}
 \end{enumerate}
 
 \section{问题四}

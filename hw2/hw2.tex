@@ -13,6 +13,7 @@
 \usepackage{booktabs}
 \usepackage{enumerate}
 \usepackage{enumitem} % 控制列表样式
+\usepackage{listings} 
 
 \title{2025模式识别 \\ 作业二}
 \date{2025.3.25}
@@ -175,7 +176,96 @@
 
 \section{问题三}
 \begin{enumerate}[label=\alph*.] 
-    \item 1
+    \item 表格如下:
+    \begin{table}[h]
+        \centering
+        \caption{Performance Metrics Table}
+        \begin{tabular}{c|c|c|c|c|c|c}
+            \hline
+            下标 & 类别标记 & 得分 & 查准率 & 查全率 & AUC-PR & AP \\
+            \hline
+            0  & - & -   & 1.0000 & 0.0000 & -      & -      \\
+            1  & 1 & 1.0 & 1.0000 & 0.2000 & 0.2000 & 0.2000 \\
+            2  & 2 & 0.9 & 0.5000 & 0.2000 & 0.0000 & 0.0000 \\
+            3  & 1 & 0.8 & 0.6667 & 0.4000 & 0.1167 & 0.1333 \\
+            4  & 1 & 0.7 & 0.7500 & 0.6000 & 0.1417 & 0.1500 \\
+            5  & 2 & 0.6 & 0.6000 & 0.6000 & 0.0000 & 0.0000 \\
+            6  & 1 & 0.5 & 0.6667 & 0.8000 & 0.1267 & 0.1333 \\
+            7  & 2 & 0.4 & 0.5714 & 0.8000 & 0.0000 & 0.0000 \\
+            8  & 2 & 0.3 & 0.5000 & 0.8000 & 0.0000 & 0.0000 \\
+            9  & 1 & 0.2 & 0.5556 & 1.0000 & 0.1056 & 0.1111 \\
+            10 & 2 & 0.1 & 0.5000 & 1.0000 & 0.0000 & 0.0000 \\
+            -  & - & -   & -      & -      & 0.6907 & 0.7277 \\
+            \hline
+        \end{tabular}
+    \end{table}
+    \item 由于AP的算法为
+    \begin{equation*}
+        AP = \sum_{i=1}^{n} (r_i - r_{i-1})*p_i
+    \end{equation*}
+    而AUC-PR为:
+    \begin{equation*}
+        AUC-PR = \sum_{i=1}^{n} (r_i - r_{i-1})*\frac{p_i+p_{i-1}}{2}
+    \end{equation*}
+    做个减法:
+    \begin{equation*}
+        AP -  AUC-PR = \sum_{i=1}^{n} (r_i - r_{i-1})*\frac{p_i - p_{i-1}}{2}
+    \end{equation*}
+    一般情况下$p_i \geq p_{i-1}$所以确实AP会比AUC大一些。
+    \item 我们通过计算可以得到新的AUC为0.6794，新的AP为0.7167.其实就是跟先进入正样本还是负样本的顺序有区别罢了。
+    \item 计算得到:AUC-PR: 0.6906,
+    AP: 0.7278.说明我们算对了。
+    代码如下：
+    \begin{lstlisting}[language=Python, caption=Python代码示例, label=code:example, basicstyle=\ttfamily]
+        import numpy as np
+        import matplotlib.pyplot as plt
+        from sklearn.metrics import precision_recall_curve, auc, average_precision_score
+
+        data = [
+            (0, 1, 1.0),
+            (1, 2, 0.9),
+            (2, 1, 0.8),
+            (3, 1, 0.7),
+            (4, 2, 0.6),
+            (5, 1, 0.5),
+            (6, 2, 0.4),
+            (7, 2, 0.3),
+            (8, 1, 0.2),
+            (9, 2, 0.1)
+        ]
+
+        true_labels = np.array([label for _, label, _ in data])
+        scores = np.array([score for _, _, score in data])
+
+        binary_labels = (true_labels == 1).astype(int)
+        precision, recall, _ = precision_recall_curve(binary_labels, scores)
+        auc_pr = auc(recall, precision)
+        ap = average_precision_score(binary_labels, scores)
+
+        print(f"AUC-PR: {auc_pr:.4f}")
+        print(f"AP: {ap:.4f}")
+
+        plt.figure()
+        plt.plot(recall, precision, marker='.', label=f'AUC-PR = {auc_pr:.4f}')
+        plt.xlabel('Recall')
+        plt.ylabel('Precision')
+        plt.title('Precision-Recall Curve')
+        plt.legend()
+        plt.savefig('pr.png')
+        plt.show()
+    \end{lstlisting}
+    图像如下:
+    \begin{figure}
+        \centering
+        \label{auc}
+        \includegraphics[width=0.8\textwidth]{pr.png} 
+        \caption{auc}  
+    \end{figure}
 \end{enumerate}
 
+\section{问题四}
+\begin{enumerate}[label=\alph*.] 
+    \item 1
+
+\end{enumerate}
 \end{document}

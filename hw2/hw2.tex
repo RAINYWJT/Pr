@@ -265,7 +265,92 @@
 
 \section{问题四}
 \begin{enumerate}[label=\alph*.] 
-    \item 1
+    \item 对于这个问题，题目其实想验证一个问题，减去均值和不减去均值会对PCA造成什么影响。
+    实际上，减去均值之后是对的，这样pca才能找到真正的变化方向。但是如果不减去均值，题目很有可能
+    把第一主成分当作均值方向。我们可以看一下实验数据的表现。
+    \begin{lstlisting}[language=matlab]
+        Scale: 1.0000, corr1: -1.0000, corr2: 0.0373
+        Scale: 0.5000, corr1: -1.0000, corr2: -0.3636
+        Scale: 0.1000, corr1: 0.9982, corr2: 0.2976
+        Scale: 0.0500, corr1: 0.9924, corr2: 0.1879
+        Scale: 0.0100, corr1: 0.2269, corr2: 0.9921
+        Scale: 0.0050, corr1: 0.1261, corr2: 0.9987
+        Scale: 0.0010, corr1: 0.2926, corr2: 0.9999
+        Scale: 0.0001, corr1: 0.0672, corr2: 1.0000
+    \end{lstlisting}
+    我们可以看到，scale很大的时候，未中心化 PCA 会使得第一主成分主要指向均值方向，这种影响最为明显。
 
+    中心化后 PCA 的主成分 $new\_e1$ 更能反映数据的真实变异方向，而不是均值的影响。可以看到这个在scale越小的时候，越接近1.
+    可以看出正确的第一主成分 $new\_e1$ 主要由数据的协方差决定，而不是均值，因此当 scale 变小时，它的方向稳定。
+
+    通过这个题可以看出来，必须减去均值（中心化），在scale小的时候影响都不大的，这才是对的。不减均值那个完全就会
+    导致整个方向错乱，甚至在scale大的时候，完全的被指向了与avg相反的方向，这是错误的。
+    \begin{lstlisting}[language=matlab]
+        rand('seed', 0);
+        scales = [1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.001, 0.0001];
+        avg = [1 2 3 4 5 6 7 8 9 10];
+        
+        for scale = scales
+            % 生成数据
+            data = randn(5000, 10) + repmat(avg * scale, 5000, 1);
+            
+            % 计算均值并归一化
+            m = mean(data);
+            m1 = m / norm(m);
+            
+            % PCA without centering
+            [~, S, V] = svd(data);
+            S = diag(S);
+            e1 = V(:,1);
+            
+            % PCA with centering
+            newdata = data - repmat(m, 5000, 1);
+            [U, S, V] = svd(newdata);
+            S = diag(S);
+            new_e1 = V(:,1);
+            
+            % 计算相关性
+            avg_scaled = avg - mean(avg);
+            avg_scaled = avg_scaled / norm(avg_scaled);
+            
+            e1 = e1 - mean(e1);
+            e1 = e1 / norm(e1);
+            
+            new_e1 = new_e1 - mean(new_e1);
+            new_e1 = new_e1 / norm(new_e1);
+            
+            corr1 = avg_scaled * e1;
+            corr2 = e1' * new_e1;
+            
+            % 输出结果
+            fprintf('Scale: %.4f, corr1: %.4f, corr2: %.4f\n', scale, corr1, corr2);
+        end
+    \end{lstlisting}
+    当然，这个题还喊我们看正确的特征向量
+    \begin{lstlisting}[language=matlab]
+        Scale: 1.0000, corr1: -1.0000, corr2: -0.6733
+        new_e1 (first 5 values): -0.3525 -0.2847 -0.4691 0.3433 -0.2291
+        Scale: 0.5000, corr1: 1.0000, corr2: 0.1689
+        new_e1 (first 5 values): -0.1231 -0.3047 0.2140 0.1848 0.0328
+        Scale: 0.1000, corr1: 0.9988, corr2: -0.5822
+        new_e1 (first 5 values): 0.4918 0.1268 0.2494 -0.0886 0.3937
+        Scale: 0.0500, corr1: -0.9964, corr2: -0.4006
+        new_e1 (first 5 values): -0.2049 -0.4067 -0.0147 0.4926 -0.0330
+        Scale: 0.0100, corr1: 0.8100, corr2: 0.1957
+        new_e1 (first 5 values): -0.0573 -0.1757 -0.4358 -0.1678 0.7425
+        Scale: 0.0050, corr1: 0.2241, corr2: 0.9998
+        new_e1 (first 5 values): -0.5281 0.4544 -0.1225 -0.3347 0.2780
+        Scale: 0.0010, corr1: 0.1857, corr2: 1.0000
+        new_e1 (first 5 values): 0.0536 0.0390 -0.4744 0.1108 0.0601
+        Scale: 0.0001, corr1: 0.4436, corr2: 1.0000
+        new_e1 (first 5 values): -0.0259 -0.2168 -0.7334 0.0134 0.4399
+    \end{lstlisting}
+    可以看出：当 scale 较大时（如 1.0 或 0.5），$new\_e1$ 的值有较大波动。例如，在 scale = 1.0 时，$new\_e1$ 的前五个值为：-0.3525 -0.2847 -0.4691 0.3433 -0.2291。这表明均值对数据影响较大，导致主成分的方向变化较大。
+    当 scale 较小时（如 0.0010 或 0.0001），$new\_e1$ 趋于稳定。例如，在 scale = 0.0010 时，$new\_e1$ 的前五个值为：0.0536 0.0390 -0.4744 0.1108 0.0601，这表明数据的协方差结构主导了特征向量，主成分变得更稳定
+\end{enumerate}
+
+\section{问题五}
+\begin{enumerate}[label=\alph*.] 
+    \item 1
 \end{enumerate}
 \end{document}

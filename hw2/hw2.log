@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.8.29)  25 MAR 2025 18:57
+This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.8.29)  25 MAR 2025 21:02
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -666,27 +666,30 @@ Overfull \hbox (29.24982pt too wide) in paragraph at lines 256--257
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
-[5]
+(/usr/local/texlive/2024/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2024/02/21 1.10 listings language file
+) [5]
+Overfull \hbox (59.25012pt too wide) in paragraph at lines 326--327
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[6] [7]
 This exam contains 0 questions with 0 parts, 0 subparts, and 0 subsubparts.
 (./hw2.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2022/08/05>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `hw2.out' has not changed.
 (rerunfilecheck)             Checksum: 8B043F4115E6E37F2124F7E917C3334C;268.
  ) 
 Here is how much of TeX's memory you used:
- 18043 strings out of 474773
- 366120 string characters out of 5757724
- 1958839 words of memory out of 5000000
- 39958 multiletter control sequences out of 15000+600000
- 568464 words of font info for 101 fonts, out of 8000000 for 9000
+ 18605 strings out of 474773
+ 373270 string characters out of 5757724
+ 2011839 words of memory out of 5000000
+ 40515 multiletter control sequences out of 15000+600000
+ 568480 words of font info for 103 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  74i,11n,81p,286b,2079s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on hw2.pdf (5 pages).
+Output written on hw2.pdf (7 pages).

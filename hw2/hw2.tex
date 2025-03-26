@@ -351,6 +351,97 @@
 
 \section{问题五}
 \begin{enumerate}[label=\alph*.] 
+    \item 左乘一个G矩阵之后，对于x的改变就是$i,j$两个。可以得到基本为:
+    \begin{equation*}
+        y = 
+        \begin{cases}
+            cx_i - sx_j, if\ y_i\\
+            sx_i + cx_j, if\ y_j\\
+            y_k, k\neq i, k \neq j
+        \end{cases}
+    \end{equation*}
+    \item 第j行的表达式为:$sx_i + cx_j = 0$, 所以有:$sx_i = -cx_j$
+    \begin{equation*}
+        \theta = \arctan(-\frac{x_j}{x_i})
+    \end{equation*}
+    这个时候就满足等于0了。等价的说，可以有这个式子:
+    \begin{equation}
+        \label{eq:4}
+        c=\frac{x_i}{r},s=\frac{-x_j}{r},\ r=\sqrt{x_i^2+ x_j^2}
+    \end{equation}
+    \item 如果不用三角函数，就用上面的Eqn.~\ref{eq:4}.那么问题就化简为一个先计算r，然后
+    \begin{itemize}
+        \item if $r\neq 0$, 用Eqn.~\ref{eq:4}
+        \item if $r=0$, c=1，s=0.既可
+    \end{itemize}
+    \item 会对A矩阵的第i行和第j行做改变，比如对于第i行的第一个元素，原来是$A_{i1}$，现在变成了$cA_{i1}-sA_{j1}$
+    对于第j行也一样，只不过变成了$sA_{i1}+cA_{j1}$，其余的列在i，j行的变化也一样。总结就是
+    \begin{equation*}
+        A'_i=cA_i - sA_j, A'_j = sA_i +cA_j
+    \end{equation*}
+    假如我们要让其中的一个$A_{jk}$为0.那么则有$sA_{ik} + cA_{jk} = 0$,$\tan\theta = -\frac{A_{jk}}{A_{ik}}$
+    那么则有：
+    \begin{equation}
+        \label{eq:5}
+        c = \frac{A_{ik}}{\sqrt{A_{ik}^2 + A_{jk}^2}},s = -\frac{A_{jk}}{\sqrt{A_{ik}^2 + A_{jk}^2}}
+    \end{equation}
+    这样就为0了。
+
+    复杂度这一块的话，如果只是单次Givens旋转，只修改2行，复杂度是O(n).
+    \item  我们可以发现，对于QR分解，这个东西本质就是把一个矩阵变成一个Q,$Q^\top Q = I$,然后这个R还是个上三角。
+    不难发现我们的Givens矩阵有一个很好的性质，对于任意的一个givens矩阵G来说,存在:
+    \begin{equation*}
+        G^\top G = I
+    \end{equation*}
+    也就是说，这个givens矩阵本身充当的就是帮助Q进行变换的角色。那么问题就简单了，不停的利用givens矩阵去小曲下三角的元素即可。
+    
+    那我们的思路就是，对于一个矩阵A来说，从左往右，从上往下去消去下三角部分的值，选
+    $A_{ij},i>j$,构造givens让$A_{ij}=0$.我们可以选对角线元素,有Eqn.~\ref{eq:5}即可。重复这个过程，每次更新Q
+    Q = QG即可。
+    最后这个东西就是这么做的。
+
+\end{enumerate}
+
+\section{问题六}
+\begin{enumerate}[label=\alph*.] 
+    \item 根据谱范数和奇异值之间的定义可以得到$\|\mathbf{A}\|_2 = \sup_{\|\mathbf{x}\|_2 = 1} \|\mathbf{A}x\|_2 = \sigma_1$即最大的奇异值。
+    所以可以得到：
+    \begin{equation*}
+        \kappa(\mathbf{X}) =  \|\mathbf{X}\|_2 \|\mathbf{X^{-1}}\|_2 = \frac{\sigma_1}{\sigma_n}
+    \end{equation*}
+    \item 此事在张利军老师的计算方法和数值分析课上已有记载。根据题目的意思是，我们要求解问题$\mathbf{Ax} = \mathbf{b},\mathbf{x} = \mathbf{A^{-1}b}$
+    由于:（不知道为什么我的tex用不了Delta的符号了，所以这里都用三角代替了）
+    \begin{equation*}
+        \mathbf{Ax} = \mathbf{b}, \mathbf{Ax+ A \bigtriangleup x} = \mathbf{b+ \bigtriangleup b}
+    \end{equation*}
+    可以得到:$\mathbf{A}\bigtriangleup \mathbf{x} = \bigtriangleup\mathbf{b}$
+    ,则$\bigtriangleup  \mathbf{x}  = \mathbf{A}^{-1}\bigtriangleup\mathbf{b}$
+    .把上面的式子转换成范数形式，可以得到一下不等式:
+    \begin{equation*}
+        \|\mathbf{b}\| \leq \|\mathbf{A}\| \|\mathbf{x}\|, \|\bigtriangleup\mathbf{x} \| \leq \|\mathbf{A^{-1}}\| \|\bigtriangleup\mathbf{b} \| 
+    \end{equation*}
+    化简可以得到：
+    \begin{equation*}
+        \frac{ \|\bigtriangleup\mathbf{x} \| }{ \|\mathbf{x} \| } \leq  \|\mathbf{A} \|  \|\mathbf{A^{-1}} \| \frac{ \|\bigtriangleup\mathbf{b} \| }{ \|\mathbf{b} \| } 
+    \end{equation*}
+    则可以看出来如果扰动b小的时候，对于x的影响还是大的。同理假如说我们对A进行扰动，也可以得到（参考数值分析）：
+    \begin{equation*}
+        \frac{ \|\bigtriangleup\mathbf{x} \| }{ \|\mathbf{x}+\bigtriangleup\mathbf{x}\| } \leq  \|\mathbf{A} \|  \|\mathbf{A^{-1}} \| \frac{ \|\bigtriangleup\mathbf{A} \| }{ \|\mathbf{A} \| } 
+    \end{equation*}
+    也可以看出来扰动会对于y造成病态的影响。
+    \item 正交矩阵满足一定的性质，比如$Q^\top Q = I,Q^{-1} = Q^\top$.所以
+    \begin{equation*}
+        \kappa(Q) = \|Q\| \|Q^{-1}\| = 1
+    \end{equation*}
+    条件数小，那就肯定好了。
+
+\end{enumerate}
+
+\section{问题七}
+\begin{enumerate}[label=\alph*.] 
     \item 1
 \end{enumerate}
+
+
+
 \end{document}

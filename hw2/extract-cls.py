@@ -26,6 +26,7 @@ model.to(device)
 
 # 加载 CUB-200-2011 数据集
 dataset = load_dataset("pkuHaowei/cub-200-2011-birds")
+print(dataset)
 
 # 选择每个类别的一张图片
 selected_images = {}

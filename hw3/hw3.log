@@ -1,10 +1,10 @@
-This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.8.29)  8 APR 2025 21:35
+This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.8.29)  15 APR 2025 20:20
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**hw2
-(./hw2.tex
+**hw3
+(./hw3.tex
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
 (/usr/local/texlive/2024/texmf-dist/tex/latex/exam/exam.cls
@@ -527,8 +527,8 @@ Package fontspec Info: Font family 'FandolSong-Regular(0)' created for font
 (fontspec)             <->"[FandolKai-Regular.otf]/OT:language=dflt;"
 (fontspec)             - 'italic small caps'  (m/scit) with NFSS spec.: 
 
-(./hw2.aux)
-\openout1 = `hw2.aux'.
+(./hw3.aux)
+\openout1 = `hw3.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 51.
 LaTeX Font Info:    ... okay on input line 51.
@@ -611,9 +611,9 @@ LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 (Font)                  OT1/cmtt/m/n --> TU/lmtt/b/n on input line 51.
 Package hyperref Info: Link coloring OFF on input line 51.
- (./hw2.out) (./hw2.out)
+ (./hw3.out) (./hw3.out)
 \@outlinefile=\write3
-\openout3 = `hw2.out'.
+\openout3 = `hw3.out'.
 
 \c@lstlisting=\count376
 LaTeX Font Info:    Trying to load font information for U+msa on input line 54.
@@ -625,76 +625,28 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 54.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
-] [2] [3]
-File: pr.png Graphic file (type bmp)
-<pr.png>
- (/usr/local/texlive/2024/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2024/02/21 1.10 listings language file
-)
-Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 226.
-
-
-Package fontspec Warning: Font "FandolFang-Regular" does not contain requested
-(fontspec)                Script "CJK".
-
-
-Package fontspec Info: Font family 'FandolFang-Regular(0)' created for font
-(fontspec)             'FandolFang-Regular' with options
-(fontspec)             [Script={CJK},Extension={.otf}].
-(fontspec)              
-(fontspec)              This font family consists of the following NFSS
-(fontspec)             series/shapes:
-(fontspec)              
-(fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <->"[FandolFang-Regular.otf]/OT:language=dflt;"
-(fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
-
-LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 227.
-
-Overfull \hbox (83.25037pt too wide) in paragraph at lines 229--231
-[][][][][][][][][][][][][][][][][][][] 
+]
+Overfull \hbox (0.53084pt too wide) in paragraph at lines 135--137
+[]\TU/FandolSong-Regular(0)/m/n/10 因 为 $\OML/cmm/m/it/10 ^^^$ \TU/FandolSong-Regular(0)/m/n/10 是 一 个 合 法 的 从 \TU/lmr/m/n/10 d->d’ \TU/FandolSong-Regular(0)/m/n/10 的 合 法 映 射，|  所 以 对 于 $\OMS/cmsy/m/n/10 f\OML/cmm/m/it/10 x[]; x[]; []  ; x[]\OMS/cmsy/m/n/10 g$\TU/FandolSong-Regular(0)/m/n/10 ，|  可 以 有 $\OMS/cmsy/m/n/10 f\OML/cmm/m/it/10 ^^^\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 x[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; ^^^\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 x[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; []  ; ^^^\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 x[]\OT1/cmr/m/n/10 )\OMS/cmsy/m/n/10 g$
  []
 
-[4]
-Overfull \hbox (11.24963pt too wide) in paragraph at lines 248--249
-[][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (29.24982pt too wide) in paragraph at lines 256--257
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-(/usr/local/texlive/2024/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2024/02/21 1.10 listings language file
-) [5]
-Overfull \hbox (59.25012pt too wide) in paragraph at lines 326--327
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-[6] [7]
-File: extract.png Graphic file (type bmp)
-<extract.png>
-File: pca.png Graphic file (type bmp)
-<pca.png>
- [8]
+[2] [3]
 This exam contains 0 questions with 0 parts, 0 subparts, and 0 subsubparts.
-(./hw2.aux)
+(./hw3.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2022/08/05>
  ***********
-Package rerunfilecheck Info: File `hw2.out' has not changed.
-(rerunfilecheck)             Checksum: F81F8AC5A94E31481A254D655EC32971;469.
+Package rerunfilecheck Info: File `hw3.out' has not changed.
+(rerunfilecheck)             Checksum: 581120E7DE381496366D497ED06C2862;335.
  ) 
 Here is how much of TeX's memory you used:
- 18639 strings out of 474773
- 374306 string characters out of 5757724
- 2011839 words of memory out of 5000000
- 40547 multiletter control sequences out of 15000+600000
- 568480 words of font info for 103 fonts, out of 8000000 for 9000
+ 17809 strings out of 474773
+ 364220 string characters out of 5757724
+ 1961839 words of memory out of 5000000
+ 39746 multiletter control sequences out of 15000+600000
+ 565507 words of font info for 87 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 74i,11n,81p,286b,2079s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 74i,11n,81p,286b,1823s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on hw2.pdf (8 pages).
+Output written on hw3.pdf (3 pages).

@@ -1,0 +1,199 @@
+% 请确保文件编码为utf-8，使用XeLaTex进行编译，或者通过overleaf进行编译
+
+\documentclass[answers]{exam}  % 使用此行带有作答模块
+% \documentclass{exam} % 使用此行只显示题目
+
+\usepackage{xeCJK}
+\usepackage{zhnumber}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{enumerate}
+\usepackage{enumitem} % 控制列表样式
+\usepackage{listings} 
+
+\title{2025模式识别 \\ 作业三}
+\date{2025.4.15}
+\pagestyle{headandfoot}
+\author{人工智能学院 221300079 王俊童}
+\firstpageheadrule
+\firstpageheader{南京大学}{2025模式识别}{作业三}
+\runningheader{南京大学}
+{2025模式识别}
+{作业三}
+\runningheadrule
+\firstpagefooter{}{第\thepage\ 页（共\numpages 页）}{}
+\runningfooter{}{第\thepage\ 页（共\numpages 页）}{}
+
+% no box for solutions
+% \unframedsolutions
+\def \x \mathbf{x}
+
+
+\setlength\linefillheight{.5in}
+
+% \renewcommand{\solutiontitle}{\noindent\textbf{答：}}
+\renewcommand{\solutiontitle}{\noindent\textbf{解：}\par\noindent}
+
+\renewcommand{\thequestion}{\zhnum{question}}
+\renewcommand{\questionlabel}{\thequestion .}
+\renewcommand{\thepartno}{\arabic{partno}}
+\renewcommand{\partlabel}{\thepartno .}
+
+\def\dist{{\mathrm{dist}}}
+\def\x{{\boldsymbol{x}}}
+\def\w{{\boldsymbol{w}}}
+
+
+\begin{document}
+% \normalsize
+\maketitle
+221300079 王俊童，人工智能学院
+\section{问题一}
+\begin{enumerate}[label=\alph*.] 
+    \item 用python完成，结果如下：
+    \begin{lstlisting}
+        10维样本的l2范数统计:
+        均值: 2.8871
+        最小值: 2.0136
+        最大值: 4.0669
+    \end{lstlisting}
+    \item 同样，用python可以得到:
+    \begin{lstlisting}
+        100维样本的l2范数统计:
+        均值: 9.9181
+        最小值: 8.8613
+        最大值: 11.0844
+
+        1000维样本的l2范数统计:
+        均值: 31.7088
+        最小值: 30.6157
+        最大值: 32.9135
+
+        10000维样本的l2范数统计:
+        均值: 99.9484
+        最小值: 98.8400
+        最大值: 101.5054
+
+        100000维样本的l2范数统计:
+        均值: 316.4926
+        最小值: 315.0430
+        最大值: 318.7029
+    \end{lstlisting}
+    \item 可以提出一个猜想是：\textbf{随着维度d变高，样本的l2范数更加接近$\sqrt{d}$的取值。他们的相对波动减少}
+    \par 可以理解为：\textbf{维度增加，对于d维度的标准高斯分布，l2范数越来越集中于$\sqrt{d}$附近。}
+    \par 相对波动:
+    \begin{equation*}
+        relative\ variance = \frac{\max - \min}{mean}
+    \end{equation*}
+    \begin{lstlisting}
+        100维样本的l2范数统计:
+        波动: 0.2241
+
+        1000维样本的l2范数统计:
+        波动: 0.0725
+
+        10000维样本的l2范数统计:
+        波动: 0.0267
+
+        100000维样本的l2范数统计:
+        波动: 0.0116
+    \end{lstlisting}
+
+    \item 如果用严谨的数学语言描述这个现象，可以解释为:
+    \par 令$X = (X_1, X_2, \cdots, X_d)^\top\sim \mathcal{N}(0, I_d)$,且其l2范数满足
+    $\|X\|_2 = \sqrt{\sum_{i=1}^{d} X_i^2}$,其l2范数的平方服从自由度为d的$\chi^2$分布。那么有以下形式的式子在概率意义下成立:
+    \begin{equation*}
+        \frac{\|X\|_2}{\sqrt{d}} \xrightarrow{P} 1, \quad when\ d \rightarrow \infty
+    \end{equation*}
+    当然这是一个服从大数定律形式的，或者可以有一个concentration的形式:
+    \begin{equation*}
+        P(|\frac{\|X\|_2}{\sqrt{d}} - 1| \geq \epsilon) \rightarrow 0, \quad when\ d \rightarrow \infty
+    \end{equation*}
+    \item 虽然集中不等式和大数定律忘的差不多了，但是可以知道这个东西服从一定的集中不等式，或者从大数定律来解释也是可以的，最后会有一个逼近性。
+\end{enumerate}
+
+\section{问题二}
+\begin{enumerate}[label=\alph*.] 
+    \item 对于核函数的半正定性质,有:$y^\top K_1 y \geq 0, y^\top K_2 y \geq 0$,
+    对于$K = K_1 + K_2$,有$y^\top K y = y^\top K_1 y + y^\top K_2 y \geq 0$,所以合法
+    \item 同理$K = K_1 - K_2$,有$y^\top K y = y^\top K_1 y - y^\top K_2 y$,但这个不是合法的核函数，可以有一个例子是
+    如果$K = 
+    \begin{pmatrix}  
+        -1 & 0 \\
+        0 & -1 
+    \end{pmatrix}$
+    那么对于一个$y = (1, 0)^\top$,有$K_1 = 0, K_2 = x^\top y$,这个是不合法的,不正定。
+    \item 对于$y^\top K_1y \geq 0$, 且$\alpha\geq 0$, 所以$\alpha y^\top K_1 y \geq 0$成立，所以合法。
+    \item 同上$\alpha y^\top K_1 y \geq 0$成立，但是$-\alpha y^\top K_1 y \leq 0$成立，所以不合法。
+    \item 对于$K = K_1 K_2$，这个是逐元素相乘，所以可以得到我们需要证明$K = K_1 K_2 \rightarrow y^\top K_1 K_2 y \geq 0$,所以我们需要证明矩阵$K_1, K_2$
+    是半正定的，我们知道他们分别是半正定,所以我们可以让$K_1 = U^\top U$。所以$y^\top K_1 K_2 y  = \sum_{i=1}^{n}\sum_{j=1}^{n} y_i^\top K_1  K_2 y_j 
+    = \sum_{i=1}^{n}\sum_{j=1}^{n}\sum_{k=1}^{n} (u_{ki}y_i) K_{ij} (u_{kj}y_j) \geq 0 $,所以合法.
+    \item 因为$\phi$是一个合法的从d->d'的合法映射，所以对于$\{x_1, x_2, \cdots, x_n\}$，可以有$\{\phi(x_1), \phi(x_2), \cdots, \phi(x_n)\}$对于原核函数也是
+    在核函数处理范围内，所以对于原来的$K = \kappa_3(\phi(x), \phi(y))$可以得到$K_3 = \kappa_3(\phi(x), \phi(y))$,$K = K_3$,由于$K_3$一定合法，所以K合法。
+\end{enumerate}
+
+\section{问题三}
+\begin{enumerate}[label=\alph*.] 
+    \item 因为要施加一个k，根据题目描述，可以得到k对于样本i有：
+    \begin{equation*}
+        k_i = \begin{cases*}
+             1,\quad y_i = 1 \\
+             k,\quad y_i = -1 
+        \end{cases*}
+    \end{equation*}
+    若$f(x) = \mathbf{w}^\top \mathbf{x_i}+ b$所以优化问题变为:
+    \begin{align*}
+        \min_{w,b} & \frac{1}{2}\mathbf{w}^\top \mathbf{w} + C \sum_{i=1}^{n} k_i \xi_i  \\
+        s.t.\quad  & y_i(\mathbf{w}^\top \mathbf{x_i} + b) \geq 1 - \xi_i, \quad 1\leq i \leq n \\
+                   & \xi_i \geq 0,\quad 1\leq i \leq n
+    \end{align*}
+    \item 把这个问题写成lagrange形式:
+    \begin{equation*}
+        L = \frac{1}{2}\mathbf{w}^\top \mathbf{w} +  C \sum_{i=1}^{n} k_i \xi_i + \sum_{i=1}^{n}\alpha_i (1 - \xi_i - y_i(\mathbf{w}^\top x + b)) - \sum_{i=1}^{n}\mu_i \xi_i
+    \end{equation*}
+    求$\mathbf{w},b,\xi_i$的导数:
+    \begin{align*}
+        & \mathbf{w} = \sum_{i=1}^{n} \alpha_i y_i \mathbf{x_i}\\
+        & 0 = \sum_{i=1}^{n} \alpha_i y_i \\
+        & k_i C = \alpha_i + \mu_i \\
+    \end{align*}
+    所以带入可以得到:
+    \begin{equation*}
+        L = \sum_{i=1}^{n} \alpha_i - \frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{n}\alpha_i \alpha_jy_i y_j \mathbf{x}_i^\top \mathbf{x}
+    \end{equation*}
+    所以对偶问题为:
+    \begin{align*}
+        \max_\alpha & \sum_{i=1}^{n} \alpha_i - \frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{n}\alpha_i \alpha_jy_i y_j \mathbf{x}_i^\top \mathbf{x}\\
+        s.t. \quad  & \sum_{i=1}^{n} \alpha_i y_i= 0,\quad 1\leq i\leq n,\\
+                    & 0 \leq \alpha_i \leq k_i C,\quad 1\leq i\leq n,\\
+    \end{align*}
+    KKT条件为:
+    \begin{equation*}
+        \begin{cases*}
+            \mu_i \geq 0, \alpha_i \geq 0\\
+            (1 - \xi_i - y_i(\mathbf{w}^\top x + b)) \geq 0 \\
+            \alpha_i (1 - \xi_i - y_i(\mathbf{w}^\top x + b)) = 0\\
+            \xi_i \geq 0 \\
+            \mu_i \xi_i = 0
+        \end{cases*}
+    \end{equation*}
+\end{enumerate}
+
+\section{问题四}
+\begin{enumerate}[label=\alph*.] 
+    \item 基本假设:属性的条件独立性假设。
+    \par 优点：分类效率稳定，可以增量学习，对缺失不太敏感，可以用小数据算置信度高的结果。
+    \par 缺点：条件独立性假设一般是不成立的，所以如果有关联的时候，朴素贝叶斯效果不好。
+    \par 这个算法是参数化的，参数空间是有限的。
+\end{enumerate}
+
+\section{问题五}
+\begin{enumerate}[label=\alph*.] 
+    \item 1
+\end{enumerate}
+
+\end{document}

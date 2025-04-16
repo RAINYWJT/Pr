@@ -232,6 +232,65 @@
 
 \section{问题五}
 \begin{enumerate}[label=\alph*.] 
+    \item 信息熵如下:
+    \begin{align*}
+        x: H &= -(0.5\log(0.5) + 0.25\log(0.25) + 0.25\log(0.25)) = 1.5\\
+        y: H &= -(0.5\log(0.5) + 0.5\log(0.5)) = 1\\
+        \hat{x}: H &= -(0.5\log(0.5) + 0.5\log(0.5)) = 1\\
+    \end{align*}
+    有损，因为在x输入是3的时候，会被还原为2.只有这种情况有损，因为信息熵减少了。
+
+    \item D如果用MSE的话，且X是一个遵守$x\sim P(X),for i =1,\cdots, n$,y遵守$y\sim Q(Y),for j = 1,\cdots, m$, 可以表示如下：
+    \begin{equation*}
+        I = \frac{1}{n} \sum_{i=1}^{n} P_i\left(x_i - g(f(x_i))\right)^2 - \lambda \sum_{j=1}^{m}Q_j \log Q_j
+    \end{equation*}
+    对于这个式子有一个可行的优化方式是，从x到y进来不要引入损失，让码率最小，所以f=0，所以g(y)有两个取值:
+    \par g(y) = 1: D = 1.25/3 = 0.4167
+    \par g(y) = 2: D = 0.75/3 = 0.25
+    \par 所以可以计算a中的这个系统性能如下:$I_a = 0.25/3 + \lambda$
+    \par b的性能为:$I_b = 0.25$
+    \par 所以
+    \begin{itemize}
+        \item $\lambda = 0.1$ : $I_a = 0.25/3 + 0.1 = 0.183$, $I_b = 0.25$
+        \item $\lambda = 1$ : $I_a = 0.25/3 + 1 = 1.083$, $I_b = 0.25$
+        \item $\lambda = 10$ : $I_a = 0.25/3 + 0.1 = 10.183$, $I_b = 0.25$
+    \end{itemize}
+    在0.1的时候a好，1和10的时候b好。
+    \item 如果y是个两类的判别，那么输入类别只有在2类概率的时候才会无损，因为只有两类别的时候信息熵才会为1
+    ，这样才能保证无损，如果是a的话，信息熵铁定大于1的，所以肯定不能保证无损。
+
+    如果$y\in \mathbb{Z}$:
+    \begin{equation*}
+        I = \frac{1}{n} \sum_{i=1}^{n} P_i\left(x_i - g(f(x_i))\right)^2 - \lambda \sum_{j=1}^{\infty}Q_j \log Q_j
+    \end{equation*}
+    那么就可以取到无穷了。
+
+    如果$y\in \mathbb{R}$,意味着他可以取连续值了（其实我x的取值写的不标准啊，应该是个积分而不是级数形式）:
+    \begin{equation*}
+        I = \frac{1}{n} \sum_{i=1}^{n} P_i\left(x_i - g(f(x_i))\right)^2 - \lambda \int_{-\infty}^{\infty}q(y) \ln q(y) dy
+    \end{equation*}
+
+    \begin{itemize}
+        \item 表达能力：R比Z厉害，因为他可以取连续值。
+        \item 编码难度：R更难，因为连续值更难编码，一般离散值是直接存储的。
+        \item 编解码器设计难度：R更难编码，也更难设计，因为连续值不好评估，Z更好设计一些。
+    \end{itemize}
+
+    \item 可以。根据定义可以得到：
+    \begin{equation*}
+        I = D + \lambda R \rightarrow loss = MSE(x,\hat{x}) + \lambda Q(y)
+    \end{equation*}
+    其中Q是一个可以设计的码率的loss比如$Q(y) = -ln(y)$，那么这样loss就可以出现了，那么类似于attention的机制那种，
+    然后这个模型就变成了神经网络的训练，encoder一个，decoder一个。那么$ln(y)$这种东西就可以用求分布和迭代来做了。
+    \item 因为训练过程中:$\hat{y} = y+  \epsilon$,相当于噪声，这种小规模的噪声可以训练出有效的梯度：
+    \begin{equation*}
+        \frac{d \hat{y}}{dy} = 1,\qquad  \frac{d[y]}{dy} = 0
+    \end{equation*}
+    这样就可以回传梯度，不然梯度为0. 从概率分布角度来说:
+    \begin{equation*}
+        f_{y+\epsilon}(y) = \int_{-0.5}^{0.5} f_y(y-x)dx , \qquad P([y] = y) = \int_{-0.5}^{0.5} f_y(y-x)dx
+    \end{equation*}
+    他们的概率分布确实是一样的，这样就合理了。
     \item 1
 \end{enumerate}
 

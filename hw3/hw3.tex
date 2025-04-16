@@ -189,6 +189,45 @@
     \par 优点：分类效率稳定，可以增量学习，对缺失不太敏感，可以用小数据算置信度高的结果。
     \par 缺点：条件独立性假设一般是不成立的，所以如果有关联的时候，朴素贝叶斯效果不好。
     \par 这个算法是参数化的，参数空间是有限的。
+    \item 根据bayes算法，可以计算出:$P(A) = \frac{1}{3}, P(B) = \frac{1}{3}, P(C) = \frac{1}{3}.$
+    \par 因为都是高斯分布，可以计算每个类别属性对应的均值和方差。
+    \begin{itemize}
+        \item (A,1):$\mu = 2.5, \sigma = 1.25$
+        \item (A,2):$\mu = 3.5, \sigma = 1.25$
+        \item (B,1):$\mu = 2.5, \sigma = 1.25$
+        \item (B,2):$\mu = 5.5, \sigma = 1.25$
+        \item (C,1):$\mu = 5.5, \sigma = 1.25$
+        \item (C,2):$\mu = 2.5, \sigma = 1.25$
+    \end{itemize}
+    根据bayes,由于分母一样:
+    \begin{equation*}
+        P(Y_k|X) = \frac{P(XY_k)}{P(X)} = \frac{P(X|Y_k)P(Y_k)}{\sum_{j} P(X|Y_j)P(Y_j)} \sim P(X|Y_k)P(Y_k)
+    \end{equation*}
+    所以(只给出第一个，后面都一样):
+    \begin{itemize}
+        \item $P_{(x_1|A)} = 1/(\sqrt{2\pi}\sqrt{1.25})* \exp(-(2-2.5)^2/(2*1.25)) = 0.323$
+        \item $P_{(x_1|B)} = 0.323$
+        \item $P_{(x_1|C)} = 0.003$
+        \item $P_{(x_2|A)} = 0.145$
+        \item $P_{(x_2|B)} = 0.003$
+        \item $P_{(x_2|C)} = 0.323$
+        \item $P_{(y_1|A)} = 0.003$
+        \item $P_{(y_1|B)} = 0.003$
+        \item $P_{(y_1|C)} = 0.323$
+        \item $P_{(y_2|A)} = 0.029$
+        \item $P_{(y_2|B)} = 0.0001$
+        \item $P_{(y_2|C)} = 0.145$
+    \end{itemize}
+    所以:
+    \begin{itemize}
+        \item $P(A|(x_1,x_2)) = 1/4 + 0.323 + 0.145 = 0.016$
+        \item $P(B|(x_1,x_2)) = 0.00029$
+        \item $P(C|(x_1,x_2)) = 0.00029$
+        \item $P(A|(y_1,y_2)) = 0.0000259$
+        \item $P(B|(y_1,y_2)) = 0.0000259$
+        \item $P(C|(y_1,y_2)) = 0.016$
+    \end{itemize}
+    所以x会为A类，y会为C类。
 \end{enumerate}
 
 \section{问题五}

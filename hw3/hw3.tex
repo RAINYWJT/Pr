@@ -242,18 +242,18 @@
 
     \item D如果用MSE的话，且X是一个遵守$x\sim P(X),for i =1,\cdots, n$,y遵守$y\sim Q(Y),for j = 1,\cdots, m$, 可以表示如下：
     \begin{equation*}
-        I = \frac{1}{n} \sum_{i=1}^{n} P_i\left(x_i - g(f(x_i))\right)^2 - \lambda \sum_{j=1}^{m}Q_j \log Q_j
+        J = \frac{1}{n} \sum_{i=1}^{n} P_i\left(x_i - g(f(x_i))\right)^2 - \lambda \sum_{j=1}^{m}Q_j \log Q_j
     \end{equation*}
     对于这个式子有一个可行的优化方式是，从x到y进来不要引入损失，让码率最小，所以f=0，所以g(y)有两个取值:
     \par g(y) = 1: D = 1.25/3 = 0.4167
     \par g(y) = 2: D = 0.75/3 = 0.25
-    \par 所以可以计算a中的这个系统性能如下:$I_a = 0.25/3 + \lambda$
-    \par b的性能为:$I_b = 0.25$
+    \par 所以可以计算a中的这个系统性能如下:$J_a = 0.25/3 + \lambda$
+    \par b的性能为:$J_b = 0.25$
     \par 所以
     \begin{itemize}
-        \item $\lambda = 0.1$ : $I_a = 0.25/3 + 0.1 = 0.183$, $I_b = 0.25$
-        \item $\lambda = 1$ : $I_a = 0.25/3 + 1 = 1.083$, $I_b = 0.25$
-        \item $\lambda = 10$ : $I_a = 0.25/3 + 0.1 = 10.183$, $I_b = 0.25$
+        \item $\lambda = 0.1$ : $J_a = 0.25/3 + 0.1 = 0.183$, $J_b = 0.25$
+        \item $\lambda = 1$ : $J_a = 0.25/3 + 1 = 1.083$, $J_b = 0.25$
+        \item $\lambda = 10$ : $J_a = 0.25/3 + 0.1 = 10.183$, $J_b = 0.25$
     \end{itemize}
     在0.1的时候a好，1和10的时候b好。
     \item 如果y是个两类的判别，那么输入类别只有在2类概率的时候才会无损，因为只有两类别的时候信息熵才会为1
@@ -261,13 +261,13 @@
 
     如果$y\in \mathbb{Z}$:
     \begin{equation*}
-        I = \frac{1}{n} \sum_{i=1}^{n} P_i\left(x_i - g(f(x_i))\right)^2 - \lambda \sum_{j=1}^{\infty}Q_j \log Q_j
+        J = \frac{1}{n} \sum_{i=1}^{n} P_i\left(x_i - g(f(x_i))\right)^2 - \lambda \sum_{j=1}^{\infty}Q_j \log Q_j
     \end{equation*}
     那么就可以取到无穷了。
 
     如果$y\in \mathbb{R}$,意味着他可以取连续值了（其实我x的取值写的不标准啊，应该是个积分而不是级数形式）:
     \begin{equation*}
-        I = \frac{1}{n} \sum_{i=1}^{n} P_i\left(x_i - g(f(x_i))\right)^2 - \lambda \int_{-\infty}^{\infty}q(y) \ln q(y) dy
+        J = \frac{1}{n} \sum_{i=1}^{n} P_i\left(x_i - g(f(x_i))\right)^2 - \lambda \int_{-\infty}^{\infty}q(y) \ln q(y) dy
     \end{equation*}
 
     \begin{itemize}
@@ -278,7 +278,7 @@
 
     \item 可以。根据定义可以得到：
     \begin{equation*}
-        I = D + \lambda R \rightarrow loss = MSE(x,\hat{x}) + \lambda Q(y)
+        J = D + \lambda R \rightarrow loss = MSE(x,\hat{x}) + \lambda Q(y)
     \end{equation*}
     其中Q是一个可以设计的码率的loss比如$Q(y) = -ln(y)$，那么这样loss就可以出现了，那么类似于attention的机制那种，
     然后这个模型就变成了神经网络的训练，encoder一个，decoder一个。那么$ln(y)$这种东西就可以用求分布和迭代来做了。
@@ -291,7 +291,72 @@
         f_{y+\epsilon}(y) = \int_{-0.5}^{0.5} f_y(y-x)dx , \qquad P([y] = y) = \int_{-0.5}^{0.5} f_y(y-x)dx
     \end{equation*}
     他们的概率分布确实是一样的，这样就合理了。
-    \item 1
+    \item 我们构造两个神经网络的encoder和decoder神经网络如下，基于e问：
+    \begin{lstlisting}[language=python]
+    # 2. 定义压缩模型（集成加性噪声离散化）
+    class CompressionModel(nn.Module):
+        def __init__(self, latent_dim=2, lambda_val=1.0):
+            super().__init__()
+            self.lambda_val = lambda_val
+            self.encoder = nn.Sequential(
+                nn.Linear(1, 32),
+                nn.ReLU(),
+                nn.Linear(32, 16),
+                nn.ReLU(),
+                nn.Linear(16, latent_dim)  # 输出连续值
+            )
+            self.decoder = nn.Sequential(
+                nn.Linear(latent_dim, 16),
+                nn.ReLU(),
+                nn.Linear(16, 32),
+                nn.ReLU(),
+                nn.Linear(32, 1)
+            )
+        
+        # 根据第e问题的实现
+        def quantize(self, y, training=False):
+            if training:
+                # 训练时：添加均匀噪声 U(-0.5, 0.5)
+                noise = torch.rand_like(y) - 0.5
+                return y + noise
+            else:
+                # 测试时：直接取整
+                return torch.round(y)
+        
+        def forward(self, x, training=False):
+            y = self.encoder(x)
+            y_quantized = self.quantize(y, training)  
+            x_recon = self.decoder(y_quantized)
+            return x_recon, y_quantized
+        
+        def compute_loss(self, x):
+            # J= D + \lambda R
+            x_recon, y_quantized = self(x, training=True)
+            # 重构误差 (MSE)
+            D = torch.mean((x - x_recon) ** 2)
+            # 码率 (信息熵估计)
+            hist = torch.histc(y_quantized, bins=20, min=-10, max=10)
+            prob = hist / torch.sum(hist)
+            R = -torch.sum(prob * torch.log2(prob + 1e-10))  # 防止log(0)
+            # 总损失
+            return D + self.lambda_val * R
+    \end{lstlisting}
+    我们完全参考上面的代码，把训练集弄一个$\epsilon$，然后熵的计算参考上面$D +\lambda R$.
+    \par $\lambda = 0.1, 1, 10$上面取值做实验，结果如下:
+    \begin{figure}[ht]
+        \centering
+        \label{result}
+        \includegraphics[width=0.8\textwidth]{result.png} 
+        \caption{result}  
+    \end{figure}
+    我们把重构和重构前的数据可视化一下:
+    \begin{figure}[ht]
+        \centering
+        \label{compression}
+        \includegraphics[width=0.8\textwidth]{compression_results.png} 
+        \caption{compression}  
+    \end{figure}
+    可以看出，MSE都比较小，$\lambda$对于码率的限制确实是有效果的。
 \end{enumerate}
 
 \end{document}

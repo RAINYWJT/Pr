@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.8.29)  16 APR 2025 18:56
+This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.8.29)  16 APR 2025 20:42
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -630,7 +630,14 @@ Overfull \hbox (0.53084pt too wide) in paragraph at lines 135--137
 []\TU/FandolSong-Regular(0)/m/n/10 因 为 $\OML/cmm/m/it/10 ^^^$ \TU/FandolSong-Regular(0)/m/n/10 是 一 个 合 法 的 从 \TU/lmr/m/n/10 d->d’ \TU/FandolSong-Regular(0)/m/n/10 的 合 法 映 射，|  所 以 对 于 $\OMS/cmsy/m/n/10 f\OML/cmm/m/it/10 x[]; x[]; []  ; x[]\OMS/cmsy/m/n/10 g$\TU/FandolSong-Regular(0)/m/n/10 ，|  可 以 有 $\OMS/cmsy/m/n/10 f\OML/cmm/m/it/10 ^^^\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 x[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; ^^^\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 x[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; []  ; ^^^\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 x[]\OT1/cmr/m/n/10 )\OMS/cmsy/m/n/10 g$
  []
 
-[2] [3] [4] [5] [6]
+[2] [3] [4] [5] (/usr/local/texlive/2024/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2024/02/21 1.10 listings language file
+) [6]
+File: result.png Graphic file (type bmp)
+<result.png>
+File: compression_results.png Graphic file (type bmp)
+<compression_results.png>
+ [7]
 This exam contains 0 questions with 0 parts, 0 subparts, and 0 subsubparts.
 (./hw3.aux)
  ***********
@@ -641,12 +648,12 @@ Package rerunfilecheck Info: File `hw3.out' has not changed.
 (rerunfilecheck)             Checksum: 581120E7DE381496366D497ED06C2862;335.
  ) 
 Here is how much of TeX's memory you used:
- 17812 strings out of 474773
- 364301 string characters out of 5757724
- 1961839 words of memory out of 5000000
- 39749 multiletter control sequences out of 15000+600000
- 565507 words of font info for 87 fonts, out of 8000000 for 9000
+ 18067 strings out of 474773
+ 369328 string characters out of 5757724
+ 1984839 words of memory out of 5000000
+ 39995 multiletter control sequences out of 15000+600000
+ 565523 words of font info for 89 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 74i,11n,81p,286b,1823s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 74i,11n,81p,286b,2033s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on hw3.pdf (6 pages).
+Output written on hw3.pdf (7 pages).

@@ -270,7 +270,19 @@
 
 \section{问题五}
 \begin{enumerate}[label=\alph*.] 
-    \item 1
+    \item 我们只需要证明一个问题即可证明独立性：$p(A, B|C) = p(A|C)p(B|C)$:
+    \[
+        p(A, B|C) = \frac{p(A, B, C)}{p(C)} = \frac{p(C|A)p(B|C)p(C)}{p(C)} = \frac{p(A, C)}{p(C)} p(B|C)=p(A|C)p(B|C)
+    \]
+    \item 1.2同理:
+    \[
+        p(A, B|C) = \frac{p(A, B, C)}{p(C)} = \frac{p(B)p(C|B)p(A|C)}{p(C)} = \frac{p(B, C)}{p(C)} p(A|C)=p(A|C)p(B|C)
+    \]
+    \item 1.3同理:
+    \[
+        p(A, B|C) = \frac{p(A, B, C)}{p(C)} = \frac{p(C)p(A|C)p(B|C)}{p(C)} = p(A|C)p(B|C)
+    \]
+    \item 
 \end{enumerate}
 
 \end{document}

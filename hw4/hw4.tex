@@ -239,4 +239,38 @@
     所以平均需要2.618的比特来编码。
 \end{enumerate}
 
+\section{问题四}
+\begin{enumerate}[label=\alph*.] 
+    \item 根据积分图的定义可以得到B:
+    \[  
+        \begin{pmatrix}
+            1 & 1 & -1 \\
+            2 & 3 & 1  \\
+            3 & 4 & 6  \\
+        \end{pmatrix}
+        \rightarrow    
+        \begin{pmatrix}
+            1 & 2 & 1 \\ 
+            3 & 7 & 7 \\
+            6 & 14 & 20 \\
+        \end{pmatrix}
+    \]
+    \item 我们根据积分图的定义，确实可以有一种动态规划的算法:
+    \[
+        B(i,j) = A(i, j) + B(i-1, j) + B(i,j -1) - B(i-1, j-1)
+    \]
+    根据动态规划算法来看，整个算法确实是$O(m*n)$的，因为每一个位置的计算都是$O(1)$的，然后确实是线性的。其实是两个大矩形相加减去重复部分就行。
+    \item 那么根据之前我们的积分图来说，任意的矩阵$i_1i_2j_1j_2$都可以$O(1)$算出来，我们只需要做3次加减法即可，相当于:
+    \[
+        S  =B(i_2,j_2) - B(i_1- 1, j_2) - B(i_2, j_1-1) + B(i_1-1, j_1-1)
+    \]  
+    所以是$O(1)$的。
+\end{enumerate}
+
+
+\section{问题五}
+\begin{enumerate}[label=\alph*.] 
+    \item 1
+\end{enumerate}
+
 \end{document}

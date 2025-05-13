@@ -282,7 +282,16 @@
     \[
         p(A, B|C) = \frac{p(A, B, C)}{p(C)} = \frac{p(C)p(A|C)p(B|C)}{p(C)} = p(A|C)p(B|C)
     \]
-    \item 
+    \item 若C没有被观察到:
+    \[
+        p(A, B) = \sum_{C}p(A,B,C) = \sum_{C} p(C|A, B)p(A)p(B) = p(A)p(B) 
+    \]
+    所以A和B独立，一个例子就是如果$C = A\oplus B$，那如果p为0.5的时候，是独立的。但是一旦我们观测到比如C=0的时候，那就是一样的，1就是不一样的。
+    \item 由于F是C的后代，不独立，所以有:
+    \[
+        p(C|F) = \frac{p(C, F)}{p(F)} = p(C) \frac{p(F|C)}{p(F)} \neq p(C)
+    \]
+    所以给定F的情况，然后我们就知道了A和B不再是独立的，而是依存的。
 \end{enumerate}
 
 \end{document}
